@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "browserify index.js -o bundle.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,9 @@
     "browserify": "^17.0.0",
     "csv-parse": "^5.3.6",
     "node-fetch": "^2.6.9",
-    "openai": "^3.2.1"
+    "openai": "^3.2.1",
+    "next": "^13.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }
