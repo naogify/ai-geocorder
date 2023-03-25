@@ -82,11 +82,13 @@ const requestOpenAI = async (CHAT_TEMPLATE) => {
 
 async function main() {
 
-  const input = "渋谷のレストランを探して下さい"
+  const input = "京田辺市のレストランを探して下さい"
 
   const response = await requestOpenAI(getPlacePrompt(input));
 
   const result = response.data.choices[0].text;
+
+  console.log(result);
   
   const isPlaceName = result.match("`");
 
@@ -123,23 +125,26 @@ async function main() {
     const responseQuery = await requestOpenAI(getAPIQueryPrompt(input, bbox));
     
     const query = responseQuery.data.choices[0].text.replace(/`/g, "");    
-    const places = await queryOverpass(query);
 
-    const features = places.elements.map(node => ({
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: [node.lon, node.lat]
-      },
-      properties: node.tags
-    }));
+    console.log(query);
+
+    // const places = await queryOverpass(query);
+
+    // const features = places.elements.map(node => ({
+    //   type: 'Feature',
+    //   geometry: {
+    //     type: 'Point',
+    //     coordinates: [node.lon, node.lat]
+    //   },
+    //   properties: node.tags
+    // }));
     
-    const geojson = {
-      type: 'FeatureCollection',
-      features: features
-    };
+    // const geojson = {
+    //   type: 'FeatureCollection',
+    //   features: features
+    // };
 
-    return geojson;
+    // return geojson;
     
 
   } else {
