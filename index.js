@@ -45,6 +45,26 @@ return `あなたは、OpenStreetMap Overpass APIの専門家アシスタント�
 `
 }
 
+const OVERPASS_API_URL = "https://overpass-api.de/api/interpreter";
+
+const queryOverpass = async (query) => {
+
+  const payload = new URLSearchParams({
+    data: query
+  });
+
+  const options = {
+    method: 'POST',
+    body: payload.toString(),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  };
+
+  const response = await fetch(OVERPASS_API_URL, options);
+  return await response.json();
+}
+
 const requestOpenAI = async (CHAT_TEMPLATE) => {
 
   const openai = new OpenAIApi(configuration);
@@ -101,9 +121,26 @@ async function main() {
     const bbox = turf.bbox(data);
 
     const responseQuery = await requestOpenAI(getAPIQueryPrompt(input, bbox));
+    
+    const query = responseQuery.data.choices[0].text.replace(/`/g, "");    
+    const places = await queryOverpass(query);
 
-    console.log(responseQuery.data.choices[0].text);
+    const features = places.elements.map(node => ({
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [node.lon, node.lat]
+      },
+      properties: node.tags
+    }));
+    
+    const geojson = {
+      type: 'FeatureCollection',
+      features: features
+    };
 
+    return geojson;
+    
 
   } else {
     console.log("地名が抽出されませんでした");
