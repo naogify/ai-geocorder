@@ -1,0 +1,25 @@
+{
+  "name": "smart-map",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naogify/smart-map.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/naogify/smart-map/issues"
+  },
+  "homepage": "https://github.com/naogify/smart-map#readme",
+  "dependencies": {
+    "@turf/turf": "^6.5.0",
+    "csv-parse": "^5.3.6",
+    "node-fetch": "^2.6.9",
+    "openai": "^3.2.1"
+  }
+}
