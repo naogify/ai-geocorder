@@ -5,6 +5,8 @@ const { parse } = require('csv-parse/sync');
 const { Configuration, OpenAIApi } = require("openai");
 const fetch = require('node-fetch');
 const turf = require('@turf/turf')
+const { normalize } = require('@geolonia/normalize-japanese-addresses')
+
 
 
 const configuration = new Configuration({
@@ -52,7 +54,24 @@ const requestOpenAI = async (CHAT_TEMPLATE) => {
 
 const main = async () => {
 
-  const response = await requestOpenAI(CHAT_TEMPLATE("京都府京田辺市のレストランを探して下さい", [135.616024,34.724862,135.906475,34.926653]))
+  const input = '誕生日におすすめの、北海道伊達市のレストランを探して下さい'
+
+  const addressesResult = await requestOpenAI(`以下の入力文の中から、住所文字列を抽出して下さい: ${input}`)
+  // 結果から改行文字と記号を削除
+  const address = addressesResult.data.choices[0].text.replace(/\n/g, '').replace(/[^\w\sぁ-んァ-ン一-龯]|_/g, "");
+  const normalized = await normalize(address)
+
+  if (!normalized.pref || !normalized.city) {
+    return '都道府県、もしくは市区町村が見つかりませんでした'
+  }
+
+  const url = `https://naogify.github.io/japanese-admins/${normalized.pref}/${normalized.city}.json`
+  const cityResponse = await fetch(url)
+  const json = await cityResponse.json()
+
+  const bbox = turf.bbox(json)
+  const response = await requestOpenAI(CHAT_TEMPLATE(input, [bbox[1], bbox[0], bbox[3], bbox[2]]))
+  
   console.log(response.data.choices[0].text)
 }
 
