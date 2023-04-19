@@ -65,7 +65,7 @@ export default function Home() {
   return (
     <div className="container">
       <Head>
-        <title>ChatGPT ジオコーダー</title>
+        <title>AI ジオコーダー</title>
       </Head>
 
       <main className={styles.main}>
