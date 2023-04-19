@@ -14,9 +14,9 @@ export default async function (req, res) {
 
   try {
 
-    const geojson = await queryOsmData(input);
+    const { geojson, query} = await queryOsmData(input);
 
-    res.status(200).json({ result: geojson });
+    res.status(200).json({ geojson, query });
   } catch(error) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
