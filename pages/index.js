@@ -14,14 +14,11 @@ export default function Home() {
       container: mapContainer.current,
       zoom: 4,
       center: [136.83, 37.88],
-      hash: true,
-      style: "geolonia/basic",
+      hash: false,
+      style: "geolonia/gsi",
     })
 
     setMapObject(map);
-
-    map.on('load', () => {
-    })
   });
 
   async function onSubmit(event) {
