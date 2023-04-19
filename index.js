@@ -1,13 +1,7 @@
-
-const fs = require('fs')
-const path = require('path')
-const { parse } = require('csv-parse/sync');
 const { Configuration, OpenAIApi } = require("openai");
 const fetch = require('node-fetch');
 const turf = require('@turf/turf')
 const { normalize } = require('@geolonia/normalize-japanese-addresses')
-
-
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -52,6 +46,26 @@ const requestOpenAI = async (CHAT_TEMPLATE) => {
   });
 }
 
+const OVERPASS_API_URL = "https://overpass-api.de/api/interpreter";
+
+const queryOverpass = async (query) => {
+
+  const payload = new URLSearchParams({
+    data: query
+  });
+
+  const options = {
+    method: 'POST',
+    body: payload.toString(),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  };
+
+  const response = await fetch(OVERPASS_API_URL, options);
+  return await response.json();
+}
+
 const main = async () => {
 
   const input = '誕生日におすすめの、北海道伊達市のレストランを探して下さい'
@@ -70,20 +84,34 @@ const main = async () => {
   const json = await cityResponse.json()
 
   const bbox = turf.bbox(json)
-  const response = await requestOpenAI(CHAT_TEMPLATE(input, [bbox[1], bbox[0], bbox[3], bbox[2]]))
-  
-  console.log(response.data.choices[0].text)
+  const queryResponse = await requestOpenAI(CHAT_TEMPLATE(input, [bbox[1], bbox[0], bbox[3], bbox[2]]))
+  const query = queryResponse.data.choices[0].text.match(/```([\s\S]*?)```/g)[0].replace(/```/g, '')
+
+  const response = await queryOverpass(query)
+
+  const geojson = {
+    type: 'FeatureCollection',
+    features: []
+  }
+
+  for (const element of response.elements) {
+    if (element.type === 'node') {
+
+      geojson.features.push({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [element.lon, element.lat]
+        },
+        properties: element.tags
+      })
+    }
+  }
+
+  return geojson
 }
 
 console.log(main())
-
-
-
-
-
-
-
-
 
 
 // const file = fs.readFileSync(path.join(__dirname, 'admins.csv'), 'utf8')
@@ -120,25 +148,7 @@ console.log(main())
 // `
 // }
 
-// const OVERPASS_API_URL = "https://overpass-api.de/api/interpreter";
 
-// const queryOverpass = async (query) => {
-
-//   const payload = new URLSearchParams({
-//     data: query
-//   });
-
-//   const options = {
-//     method: 'POST',
-//     body: payload.toString(),
-//     headers: {
-//       'Content-Type': 'application/x-www-form-urlencoded'
-//     }
-//   };
-
-//   const response = await fetch(OVERPASS_API_URL, options);
-//   return await response.json();
-// }
 
 
 
