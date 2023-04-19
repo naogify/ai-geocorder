@@ -65,7 +65,7 @@ export default function Home() {
   return (
     <div className="container">
       <Head>
-        <title>AI ジオコーダー</title>
+        <title>自然言語ジオコーディング by OpenAI API</title>
       </Head>
 
       <main className={styles.main}>
