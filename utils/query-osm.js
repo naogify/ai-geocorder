@@ -60,13 +60,14 @@ const queryOverpass = async (query) => {
 
 export const queryOsmData = async (input) => {
 
-  const addressesResult = await requestOpenAI(`以下の入力文の中から、住所文字列を抽出して下さい: ${input}`)
+  const addressesResult = await requestOpenAI(`次の入力文から市区町村名を抽出して下さい。入力文:${input}`)
+  
   // 結果から改行文字と記号を削除
   const address = addressesResult.data.choices[0].text.replace(/\n/g, '').replace(/[^\w\sぁ-んァ-ン一-龯]|_/g, "");
   const normalized = await normalize(address)
 
   if (!normalized.pref || !normalized.city) {
-    return '都道府県、もしくは市区町村が見つかりませんでした'
+    throw new Error("市区町村名を入力して下さい。");
   }
 
   const url = `https://naogify.github.io/japanese-admins/${normalized.pref}/${normalized.city}.json`
@@ -86,15 +87,20 @@ export const queryOsmData = async (input) => {
   }
 
   for (const element of response.elements) {
-    if (element.type === 'node') {
-
+    if (
+      element.type === 'node' && 
+      element.tags && 
+      element.tags.hasOwnProperty('name')
+    ) {
       geojson.features.push({
         type: 'Feature',
         geometry: {
           type: 'Point',
           coordinates: [element.lon, element.lat]
         },
-        properties: element.tags
+        properties: {
+          title: element.tags.name,
+        }
       })
     }
   }
