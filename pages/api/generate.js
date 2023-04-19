@@ -14,20 +14,19 @@ export default async function (req, res) {
 
   try {
 
-    const geojson = await queryOsmData(input);
-    console.log(geojson);
+    const { geojson, query} = await queryOsmData(input);
 
-    res.status(200).json({ result: geojson });
+    res.status(200).json({ geojson, query });
   } catch(error) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
       console.error(error.response.status, error.response.data);
       res.status(error.response.status).json(error.response.data);
     } else {
-      console.error(`Error with OpenAI API request: ${error.message}`);
+      console.error(`Error with OpenAI API request: ${JSON.stringify(error.message)}`);
       res.status(500).json({
         error: {
-          message: 'An error occurred during your request.',
+          message: error.message || 'An error occurred during your request.',
         }
       });
     }
