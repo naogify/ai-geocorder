@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/naogify/smart-map#readme",
   "dependencies": {
+    "@geolonia/normalize-japanese-addresses": "^2.7.4",
     "@turf/turf": "^6.5.0",
     "browserify": "^17.0.0",
     "csv-parse": "^5.3.6",
