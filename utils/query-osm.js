@@ -1,7 +1,7 @@
-const { Configuration, OpenAIApi } = require("openai");
-const fetch = require('node-fetch');
-const turf = require('@turf/turf')
-const { normalize } = require('@geolonia/normalize-japanese-addresses')
+import { Configuration, OpenAIApi } from "openai";
+import fetch from "node-fetch";
+import * as turf from '@turf/turf'
+import { normalize } from "@geolonia/normalize-japanese-addresses";
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -20,14 +20,6 @@ const CHAT_TEMPLATE = (human_input, bbox) => {
   {history}
   Human: ${human_input}
   Assistant:
-  `
-}
-
-const READER_TEMPLATE = () => {
-
-  return `Read the following Overpass API response carefully. Use the information in it to answer the prompt "{prompt}" Your answer should not mention the words "API" or "Overpass." Your answer should sound like it was spoken by someone with personal knowledge of the question's answer. Your answer should be very concise, but also informative and fun. Format any names or places you get from the API response as bold text in Markdown.
-  Overpass API Response:
-  Answer: {response}
   `
 }
 
@@ -66,9 +58,7 @@ const queryOverpass = async (query) => {
   return await response.json();
 }
 
-const main = async () => {
-
-  const input = '誕生日におすすめの、北海道伊達市のレストランを探して下さい'
+export const queryOsmData = async (input) => {
 
   const addressesResult = await requestOpenAI(`以下の入力文の中から、住所文字列を抽出して下さい: ${input}`)
   // 結果から改行文字と記号を削除
@@ -84,6 +74,7 @@ const main = async () => {
   const json = await cityResponse.json()
 
   const bbox = turf.bbox(json)
+  
   const queryResponse = await requestOpenAI(CHAT_TEMPLATE(input, [bbox[1], bbox[0], bbox[3], bbox[2]]))
   const query = queryResponse.data.choices[0].text.match(/```([\s\S]*?)```/g)[0].replace(/```/g, '')
 
@@ -111,7 +102,6 @@ const main = async () => {
   return geojson
 }
 
-console.log(main())
 
 
 // const file = fs.readFileSync(path.join(__dirname, 'admins.csv'), 'utf8')
