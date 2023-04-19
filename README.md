@@ -6,6 +6,11 @@
 $ npm install
 $ npm run dev
 ```
+OpenAI の APIキーを `.env` の　`OPENAI_API_KEY=xxx`にセットして下さい
+```
+cp .env.example .env 
+vi .en
+```
 
 
 
