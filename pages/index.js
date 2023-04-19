@@ -82,7 +82,7 @@ export default function Home() {
             <input type="submit" value="質問する" />
           </form>
           <textarea className={styles.textarea} value={query} disabled/>
-          <div className={styles.subTitle}>このアプリでは、入力した文章から <a href="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-v3_1.html" target="_blank" rel="noopener noreferrer">国土数値情報の行政区域データ</a>からバウンディングボックスを生成し、入力文とバウンディングボックスを ChatGPT に渡し<a href="https://wiki.openstreetmap.org/wiki/JA:Overpass_API" target="_blank" rel="noopener noreferrer">Overpass_API</a>のクエリを生成します</div>
+          <div className={styles.subTitle}>このアプリでは、入力した文章から <a href="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-v3_1.html" target="_blank" rel="noopener noreferrer">国土数値情報の行政区域データ</a>からバウンディングボックスを生成し、入力文とバウンディングボックスを OpenAIのAPI に渡し<a href="https://wiki.openstreetmap.org/wiki/JA:Overpass_API" target="_blank" rel="noopener noreferrer">Overpass_API</a>のクエリを生成します</div>
           <a href="https://github.com/earth-genome/ChatGeoPT" target="_blank" rel="noopener noreferrer">本プロジェクトは、ChatGeoPT をベースに作成しています。</a>
           <a href="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-v3_1.html" target="_blank" rel="noopener noreferrer">「国土数値情報（行政区域データ）」（国土交通省）を加工して作成</a>
         </div>
