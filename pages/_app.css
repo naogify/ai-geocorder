@@ -1,4 +1,8 @@
-html, body, #__next, .container, main {
+html,
+body,
+#__next,
+.container,
+main {
   padding: 0;
   margin: 0;
   height: 100%;

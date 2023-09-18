@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useState, useEffect, useRef } from "react";
+import ReactLoading from 'react-loading';
 import styles from "./index.module.css";
 
 export default function Home() {
@@ -71,9 +72,12 @@ export default function Home() {
       <Head>
         <title>自然言語ジオコーディング by OpenAI API</title>
       </Head>
-
+      {!loading &&
+        <div className={styles.loading}>
+          <ReactLoading type="spin" color="#999999" height={"15%"} width={"15%"} />
+        </div>
+      }
       <main className={styles.main}>
-        {loading && <div>Loading...</div>}
         <div className={styles.inputSection}>
           <h3>探したい場所を入力して下さい</h3>
           <form onSubmit={onSubmit}>
