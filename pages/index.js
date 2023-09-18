@@ -7,6 +7,7 @@ export default function Home() {
   const [query, setQuery] = useState();
   const [mapObject, setMapObject] = useState();
   const [simpleStyle, setSimpleStyle] = useState();
+  const [loading, setLoading] = useState(false);
   const mapContainer = useRef(null);
 
   useEffect(() => {
@@ -23,6 +24,7 @@ export default function Home() {
 
   async function onSubmit(event) {
     event.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -54,11 +56,13 @@ export default function Home() {
           setSimpleStyle(simpleStyle)
         }
       }
-
+      
       setInputText("");
+      setLoading(false);
     } catch (error) {
       console.error(error);
       alert(error.message);
+      setLoading(false);
     }
   }
 
@@ -69,6 +73,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
+        {loading && <div>Loading...</div>}
         <div className={styles.inputSection}>
           <h3>探したい場所を入力して下さい</h3>
           <form onSubmit={onSubmit}>
