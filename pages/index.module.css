@@ -125,7 +125,8 @@
     padding: 30px;
     box-sizing: border-box;
     justify-content: flex-start;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   .textarea {
     width: 100%;
