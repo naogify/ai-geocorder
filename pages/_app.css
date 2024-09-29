@@ -8,3 +8,34 @@ main {
   height: 100%;
   width: 100%;
 }
+
+.popup-table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed
+}
+
+.popup-table th,
+.popup-table td {
+  border: 1px solid #ddd;
+  text-align: left;
+  padding: 8px;
+  overflow-wrap: break-word;
+}
+
+.popup-table th {
+  background-color: #f2f2f2;
+}
+
+.maplibregl-popup-content {
+  height: 40vh;
+  overflow: auto;
+}
+
+.maplibregl-popup-content h3 {
+  font-size: 18px!important;
+  font-weight: normal!important;
+  margin: 0!important;
+  margin-bottom: 15px!important;
+  text-align: center!important;
+}

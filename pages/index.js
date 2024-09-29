@@ -20,6 +20,33 @@ export default function Home() {
       style: "geolonia/gsi",
     })
 
+    map.on('load', () => {
+
+      map.on("click", (e) => {
+        const features = map.queryRenderedFeatures(e.point);
+        if (!features.length) {
+          return;
+        }
+        const feature = features[0];
+        const coordinates = feature.geometry.coordinates.slice();
+        const properties = feature.properties;
+
+        let tableHTML = `<h3>${properties.title}</h3>`;
+        tableHTML += "<table class='popup-table'>";
+        for (let key in properties) {
+          tableHTML += `<tr><td>${key}</td><td>${properties[key]}</td></tr>`;
+        }
+        tableHTML += "</table>";
+
+        new geolonia.Popup({
+          maxWidth: "300px"
+        })
+          .setLngLat(coordinates)
+          .setHTML(tableHTML)
+          .addTo(map);
+      });
+    });
+
     setMapObject(map);
   });
 

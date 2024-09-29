@@ -116,6 +116,7 @@ export const queryOsmData = async (input) => {
         },
         properties: {
           title: element.tags.name,
+          ... element.tags
         }
       })
     }
